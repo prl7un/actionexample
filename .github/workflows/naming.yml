@@ -1,9 +1,0 @@
-name: Naming
-on: push
-jobs:
-  print:
-    name: Super Useful Job # 잡 이름 지정
-    runs-on: ubuntu-latest
-    steps:
-      - name: Amazing Script # 스텝 이름 지정
-        run: echo "Hello"
