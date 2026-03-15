@@ -1,9 +1,0 @@
-name: Concurrency
-on: push
-concurrency: ${{ github.workflow }}  # concurrency 그룹에 워크플로명 지정
-jobs:
-  sleep:
-    runs-on: ubuntu-latest
-    steps:
-      - run: sleep 120
-   
