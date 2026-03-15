@@ -6,6 +6,6 @@ concurrency:
 jobs:
   sleep:
     runs-on: ubuntu-latest
-    steps:
-      - run: sleep 120
+    steps: 
+      - run: sleep 120 
    
