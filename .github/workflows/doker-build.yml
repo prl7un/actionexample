@@ -28,4 +28,4 @@ jobs:
         context: .
         push: true
         # '아이디/이미지이름:태그' 형식입니다.
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/my-first-docker1:latest
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/my-first-docker:latest
