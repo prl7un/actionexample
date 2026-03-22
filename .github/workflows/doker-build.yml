@@ -1,6 +1,5 @@
-name: Docker Build and Push
+name: Docker Build and Push with Security Scan
 
-# 언제 실행할지 결정 (main 브랜치에 push가 일어날 때)
 on:
   push:
     branches: [ "main" ]
@@ -10,22 +9,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. 깃허브 저장소의 코드를 가져옴
+    # 1. 코드를 가져옴
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # 2. 도커허브에 로그인
+    # 2. 도커허브 로그인
     - name: Login to Docker Hub
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    # 3. 이미지 빌드 후 도커허브로 푸시
+    # 3. [보안 점검] 빌드하기 전에 먼저 '코드'나 '이미지'의 취약점을 점검합니다.
+    # 여기서는 이미지를 먼저 빌드(push는 안 함)하고 스캔하는 순서로 진행합니다.
+    - name: Build image for scanning
+      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/my-first-docker:latest .
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: '${{ secrets.DOCKERHUB_USERNAME }}/my-first-docker:latest'
+        format: 'table'
+        exit-code: '0' # 중요: 0으로 설정하면 취약점이 발견되어도 빌드를 중단하지 않고 리포트만 보여줍니다.
+        severity: 'CRITICAL,HIGH'
+
+    # 4. 보안 점검 후 최종적으로 도커허브로 푸시
     - name: Build and push
       uses: docker/build-push-action@v4
       with:
         context: .
         push: true
-        # '아이디/이미지이름:태그' 형식입니다.
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/my-first-docker:latest

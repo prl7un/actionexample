@@ -5,7 +5,7 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # 3. 화면에 "Hello Docker"를 출력하는 간단한 코드 작성
-RUN echo "print('Hello from GitHub Actions and Docker!')" > hello.py
+RUN echo "print('CI/CD Pipeline and Trivy Scan Success')" > hello.py
 
 # 4. 컨테이너가 실행될 때 실행할 명령어
 CMD ["python", "hello.py"]
